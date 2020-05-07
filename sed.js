@@ -61,9 +61,21 @@ fs.readFile(absolutePath, (err, data) => {
   else {
     if (Array.isArray(yargs.e)) {
       const patterns = yargs.e;
+      for (pattern of patterns) {
+        validator.isAValidPattern(pattern);
+        contentText = replacer.getPatternResult(pattern, contentText);
+      }
     }
-    if (typeof yargs.f === string) {
-      const patterns = fs.readFileSync(yargs.f, 'utf8').split('\r\n');
+    if (typeof yargs.f === 'string') {
+      let patterns;
+      // this catch if the file has an error
+      try {
+        // split each line as a pattern
+        patterns = fs.readFileSync(yargs.f, 'utf8').split('\r\n');
+      } catch (e) {
+        console.log('Script file does not exist');
+        return process.exit();
+      }
       for (pattern of patterns) {
         validator.isAValidPattern(pattern);
         contentText = replacer.getPatternResult(pattern, contentText);

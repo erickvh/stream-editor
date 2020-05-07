@@ -30,8 +30,6 @@ const rawArgs = yargs._;
 // validator needed for the minimun case needed
 validator.hasEnoughParams(rawArgs);
 // this variables will store pattern and filepath
-let pattern, filePath;
-console.log(yargs);
 [pattern, filePath] = rawArgs;
 
 // in case filepath is undefined, the first  raw parameter is the path

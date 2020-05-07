@@ -85,7 +85,6 @@ module.exports = {
   isAAccesibleFile,
   hasAtLeastOneRawArgs,
   hasManyRawArgs,
-  isValidOneParam,
   hasOptionIAndF,
   hasEnoughParams,
   hasTwoParams,

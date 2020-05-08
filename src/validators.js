@@ -1,6 +1,6 @@
 const fs = require('fs').promises;
 
-const regexForPattern = /^s\/[a-zA-Z. ]+\/[a-zA-Z. ]+\/[g|p]?$/;
+const regexForPattern = /^s\/[a-zA-Z. ]+\/[a-zA-Z. ]+\/[g|p|I]?$/;
 
 // check if the pattern is correct for the regex given
 function isAValidPattern(pattern) {

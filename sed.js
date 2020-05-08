@@ -27,18 +27,35 @@ const replacer = require('./src/replacer');
 
 // this variable store all the parameters in which it's not a option
 const rawArgs = yargs._;
+
 // validator needed for the minimun case needed
 validator.hasEnoughParams(rawArgs);
-// this variables will store pattern and filepath
-[pattern, filePath] = rawArgs;
+// check if it has flags or is a valid flag
+validator.hasAValidFlag(rawArgs);
 
+// this variables will store pattern and filepath
+let filePath, pattern, wfile;
 // in case filepath is undefined, the first  raw parameter is the path
-if (!filePath) {
+if (!validator.isFirstParamPattern(rawArgs)) {
   filePath = rawArgs[0];
+} else {
+  pattern = rawArgs[0];
+  // when it has flag w, need to have three files
+  if (validator.hasWFlag(rawArgs)) {
+    if (rawArgs.length !== 3) {
+      console.log('It should have 3 params at leats');
+      return process.exit();
+    }
+    // once it has three params is a valid w flag
+    wfile = rawArgs[1];
+    filePath = rawArgs[2];
+  } else {
+    // in case is not a flag so can be filepath as second argument raw
+    filePath = rawArgs[1];
+  }
 }
 
 const absolutePath = path.resolve(filePath);
-
 validator.isAAccesibleFile(absolutePath);
 
 // start to readfile

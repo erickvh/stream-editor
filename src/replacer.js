@@ -6,11 +6,9 @@ function getPatternResult(pattern, contentText) {
   let searchRegexPattern;
   //not flag options implemented case doesn't exist flag
   if (!flag) {
-    searchPattern = new RegExp(searchPattern);
+    searchRegexPattern = new RegExp(searchPattern);
   } else {
     switch (flag) {
-      case 'e':
-        break;
       case 'I':
         searchRegexPattern = new RegExp(searchPattern, 'i');
         break;

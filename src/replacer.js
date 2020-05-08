@@ -4,8 +4,8 @@ function getPatternResult(pattern, contentText) {
   const stringToReplace = splittedPattern[2];
   const flag = splittedPattern[3];
   let searchRegexPattern;
-  //not flag options implemented case doesn't exist flag
-  if (!flag) {
+  //not flag options implemented case doesn't exist flag, or when exist w flag
+  if (!flag || flag === 'w') {
     searchRegexPattern = new RegExp(searchPattern);
   } else {
     switch (flag) {

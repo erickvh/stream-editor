@@ -102,7 +102,7 @@ function hasAValidFlag(rawArgs) {
 function hasWFlag(rawArgs) {
   const splittedArg = rawArgs[0].split('/');
   let checklast = splittedArg[splittedArg.length - 1];
-  if (checklast === 'w' && splittedArg.length == 4) {
+  if (checklast === 'w' && splittedArg.length == 4 && checklast) {
     return true;
   }
   return false;

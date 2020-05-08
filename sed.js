@@ -67,10 +67,15 @@ fs.readFile(absolutePath, (err, data) => {
   // this variable catch the initial data, and transform into a new result on each call
   let contentText = data.toString();
   // options: -i, -n
-  if (validator.hasTwoParams(rawArgs)) {
+  if (validator.hasTwoParams(rawArgs) || wfile) {
     // first check if the pattern is correct
     validator.isAValidPattern(pattern);
     contentText = replacer.getPatternResult(pattern, contentText);
+
+    // in case exist wfile has w flag
+    if (wfile) {
+      fs.writeFileSync(wfile, contentText);
+    }
   }
   // options: -f,-e,-i,-n
   else {

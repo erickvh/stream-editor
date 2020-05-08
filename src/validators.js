@@ -1,6 +1,6 @@
 const fs = require('fs').promises;
 
-const regexForPattern = /^s\/[a-zA-Z. ]+\/[a-zA-Z. ]+\/[g|p]?$/;
+const regexForPattern = /^s\/[a-zA-Z. ]+\/[a-zA-Z. ]+\/[g|p|I|w]?$/;
 
 // check if the pattern is correct for the regex given
 function isAValidPattern(pattern) {
@@ -38,10 +38,18 @@ function hasAtLeastOneRawArgs(rawArgs) {
 
 // check if rawargs has many rawargs
 function hasManyRawArgs(rawArgs) {
-  if (!(Array.isArray(rawArgs) && rawArgs.length <= 2)) {
-    console.log('at least two parameters needed to operate');
+  if (!(Array.isArray(rawArgs) && rawArgs.length <= 3)) {
+    console.log('at least three parameters needed to operate');
     return process.exit();
   }
+}
+
+function isFirstParamPattern(rawArgs) {
+  let isFirstParamPattern = false;
+  if (regexForPattern.test(rawArgs[0])) {
+    isFirstParamPattern = true;
+  }
+  return isFirstParamPattern;
 }
 
 // check both validators into a single one
@@ -79,6 +87,26 @@ function hasTwoParams(rawArgs) {
   }
   return hasTwoParams;
 }
+function hasAValidFlag(rawArgs) {
+  const splittedArg = rawArgs[0].split('/');
+  let checklast = splittedArg[splittedArg.length - 1];
+  const availableFlags = ['I', 'p', 'g', 'w'];
+  // if it has the 4 splitted has a flag
+  if (splittedArg.length === 4 && checklast) {
+    if (!availableFlags.includes(checklast)) {
+      console.log('it should have a valid flag');
+      return process.exit();
+    }
+  }
+}
+function hasWFlag(rawArgs) {
+  const splittedArg = rawArgs[0].split('/');
+  let checklast = splittedArg[splittedArg.length - 1];
+  if (checklast === 'w' && splittedArg.length == 4 && checklast) {
+    return true;
+  }
+  return false;
+}
 module.exports = {
   isAValidPath,
   isAValidPattern,
@@ -88,4 +116,7 @@ module.exports = {
   hasOptionIAndF,
   hasEnoughParams,
   hasTwoParams,
+  isFirstParamPattern,
+  hasWFlag,
+  hasAValidFlag,
 };

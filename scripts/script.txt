@@ -1,0 +1,2 @@
+s/Peter/Pedro/
+s/peck/PECK/g

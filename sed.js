@@ -70,8 +70,9 @@ fs.readFile(absolutePath, (err, data) => {
   if (validator.hasTwoParams(rawArgs) || wfile) {
     // first check if the pattern is correct
     validator.isAValidPattern(pattern);
-    contentText = replacer.getPatternResult(pattern, contentText);
-
+    contentText = replacer.getPatternResult(pattern, contentText, yargs);
+    const splittedPattern = pattern.split('/');
+    const flag = splittedPattern[3];
     // in case exist wfile has w flag
     if (wfile) {
       fs.writeFileSync(wfile, contentText);
@@ -83,7 +84,7 @@ fs.readFile(absolutePath, (err, data) => {
       const patterns = yargs.e;
       for (pattern of patterns) {
         validator.isAValidPattern(pattern);
-        contentText = replacer.getPatternResult(pattern, contentText);
+        contentText = replacer.getPatternResult(pattern, contentText, yargs);
       }
     }
     if (typeof yargs.f === 'string') {
@@ -98,7 +99,7 @@ fs.readFile(absolutePath, (err, data) => {
       }
       for (pattern of patterns) {
         validator.isAValidPattern(pattern);
-        contentText = replacer.getPatternResult(pattern, contentText);
+        contentText = replacer.getPatternResult(pattern, contentText, yargs);
       }
     }
   }

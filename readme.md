@@ -23,6 +23,7 @@ npm install
 
 ## options
 
+```
 --version: show version number [booleano]
 -n consider files as separate rather than as a single, continuous
 long stream [booleano]
@@ -33,6 +34,8 @@ processing the input. [tabla]
 commands to be run while processing the input.
 [String]
 -h, --help Show help
+
+```
 
 ### usage
 

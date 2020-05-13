@@ -11,6 +11,7 @@ import {
   isAAccesibleFile,
   hasTwoParams,
   isAValidPattern,
+  optionEHasNumber,
 } from './src/validators';
 
 import getPatternResult from './src/replacer';
@@ -45,9 +46,12 @@ const rawArgs = argv._;
 hasEnoughParams(rawArgs);
 // check if it has flags or is a valid flag
 hasAValidFlag(rawArgs);
+// check if -e option contains at least an element number
+optionEHasNumber(argv.e);
 
 // this variables will store pattern and filepath
 let filePath: string, pattern: string, wfile: string;
+
 // in case filepath is undefined, the first  raw parameter is the path
 if (!isFirstParamPattern(rawArgs)) {
   filePath = rawArgs[0];

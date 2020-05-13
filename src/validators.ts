@@ -1,5 +1,6 @@
 import { promises, access } from 'fs';
 import { IArgv } from './interfaces/interfaces';
+import { validEOption } from './types/types';
 
 const regexForPattern: RegExp = /^s\/[a-zA-Z. ]+\/[a-zA-Z. ]+\/[g|p|I|w]?$/;
 
@@ -14,31 +15,31 @@ export function isAValidPattern(pattern: string) {
 // check if the file is readable
 export async function isAAccesibleFile(absolutePath: string) {
   try {
-    const data = await promises.access(absolutePath);
+    await promises.access(absolutePath);
   } catch (e) {
     console.error(
       "File doesn't exists or user doesn't have permissions to access to it"
     );
-    return process.exit();
+    process.exit();
   }
 }
 // check if rawargs has at least one rawargs
-export function hasAtLeastOneRawArgs(rawArgs: string[]) {
+export function hasAtLeastOneRawArgs(rawArgs: string[]): void {
   if (!(Array.isArray(rawArgs) && rawArgs.length >= 1)) {
-    console.error('any parameters to operate');
-    return process.exit();
+    console.error('Any parameters to operate');
+    process.exit();
   }
 }
 
 // check if rawargs has many rawargs
-export function hasManyRawArgs(rawArgs: string[]) {
+export function hasManyRawArgs(rawArgs: string[]): void {
   if (!(Array.isArray(rawArgs) && rawArgs.length <= 3)) {
     console.error('at least three parameters needed to operate');
-    return process.exit();
+    process.exit();
   }
 }
 
-export function isFirstParamPattern(rawArgs: string[]) {
+export function isFirstParamPattern(rawArgs: string[]): boolean {
   let isFirstParamPattern = false;
   if (regexForPattern.test(rawArgs[0])) {
     isFirstParamPattern = true;
@@ -47,7 +48,7 @@ export function isFirstParamPattern(rawArgs: string[]) {
 }
 
 // check both validators into a single one
-export function hasEnoughParams(rawArgs: string[]) {
+export function hasEnoughParams(rawArgs: string[]): void {
   hasAtLeastOneRawArgs(rawArgs);
   hasManyRawArgs(rawArgs);
 }
@@ -61,20 +62,8 @@ export function isValidOneParam(yargs: IArgv) {
   return isValid;
 }
 
-export function hasOptionIAndF(yargs: IArgv) {
-  // first check if is valid for one param
-  if (isValidOneParam(yargs)) {
-    // if it yargs containg both options is an invalid execution
-    if (yargs.e && yargs.f) {
-      const e = '-e';
-      const f = '-f';
-      console.error(`Both options ${e} ${f} are not valid together`);
-      return process.exit();
-    }
-  }
-}
 // when the params are two can be used a patter and a file
-export function hasTwoParams(rawArgs: string[]) {
+export function hasTwoParams(rawArgs: string[]): boolean {
   let hasTwoParams = false;
   if (Array.isArray(rawArgs) && rawArgs.length == 2) {
     hasTwoParams = true;
@@ -84,22 +73,35 @@ export function hasTwoParams(rawArgs: string[]) {
 
 export function hasAValidFlag(rawArgs: string[]) {
   const splittedArg = rawArgs[0].split('/');
-  let checklast = splittedArg[splittedArg.length - 1];
-  const availableFlags = ['I', 'p', 'g', 'w'];
+  const checklast = splittedArg[splittedArg.length - 1];
+  const availableFlags: [string, string, string, string] = ['I', 'p', 'g', 'w'];
   // if it has the 4 splitted has a flag
   if (splittedArg.length === 4 && checklast) {
     if (!availableFlags.includes(checklast)) {
-      console.error('it should have a valid flag');
-      return process.exit();
+      console.error('It should have a valid flag');
+      process.exit();
     }
   }
 }
 
-export function hasWFlag(rawArgs: string[]) {
+export function hasWFlag(rawArgs: string[]): boolean {
   const splittedArg = rawArgs[0].split('/');
   let checklast = splittedArg[splittedArg.length - 1];
   if (checklast === 'w' && splittedArg.length == 4 && checklast) {
     return true;
   }
   return false;
+}
+
+export function optionEHasNumber(eValue: validEOption): void {
+  if (eValue) {
+    const hasSomeNumber = eValue.some((value) => {
+      typeof value == 'number';
+    });
+
+    if (hasSomeNumber) {
+      console.error('Has at least one number param for -e option');
+      process.exit();
+    }
+  }
 }

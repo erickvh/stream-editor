@@ -1,10 +1,27 @@
-const path = require('path');
-const fs = require('fs');
-const yargs = require('yargs')
-  .boolean('n')
-  .boolean('i')
-  .array('e')
-  .string('f')
+import { resolve } from 'path';
+import { writeFileSync, readFileSync, readFile } from 'fs';
+import yargs from 'yargs';
+import { IArgv } from './src/interfaces/interfaces';
+// own requires
+import {
+  hasEnoughParams,
+  hasAValidFlag,
+  isFirstParamPattern,
+  hasWFlag,
+  isAAccesibleFile,
+  hasTwoParams,
+  isAValidPattern,
+} from './src/validators';
+
+import getPatternResult from './src/replacer';
+
+const argv: IArgv = yargs
+  .options({
+    n: { type: 'boolean' },
+    i: { type: 'boolean' },
+    f: { type: 'string' },
+    e: { type: 'array' },
+  })
   .describe(
     'n',
     'consider files as separate rather than as a single, continuous long stream'
@@ -21,30 +38,26 @@ const yargs = require('yargs')
   .help('h')
   .alias('h', 'help').argv;
 
-// own requires
-const validator = require('./src/validators');
-const replacer = require('./src/replacer');
-
 // this variable store all the parameters in which it's not a option
-const rawArgs = yargs._;
+const rawArgs = argv._;
 
 // validator needed for the minimun case needed
-validator.hasEnoughParams(rawArgs);
+hasEnoughParams(rawArgs);
 // check if it has flags or is a valid flag
-validator.hasAValidFlag(rawArgs);
+hasAValidFlag(rawArgs);
 
 // this variables will store pattern and filepath
-let filePath, pattern, wfile;
+let filePath: string, pattern: string, wfile: string;
 // in case filepath is undefined, the first  raw parameter is the path
-if (!validator.isFirstParamPattern(rawArgs)) {
+if (!isFirstParamPattern(rawArgs)) {
   filePath = rawArgs[0];
 } else {
   pattern = rawArgs[0];
   // when it has flag w, need to have three files
-  if (validator.hasWFlag(rawArgs)) {
+  if (hasWFlag(rawArgs)) {
     if (rawArgs.length !== 3) {
-      console.log('It should have 3 params at leats');
-      return process.exit();
+      console.error('It should have 3 params at leats');
+      process.exit();
     }
     // once it has three params is a valid w flag
     wfile = rawArgs[1];
@@ -55,11 +68,11 @@ if (!validator.isFirstParamPattern(rawArgs)) {
   }
 }
 
-const absolutePath = path.resolve(filePath);
-validator.isAAccesibleFile(absolutePath);
+const absolutePath = resolve(filePath);
+isAAccesibleFile(absolutePath);
 
 // start to readfile
-fs.readFile(absolutePath, (err, data) => {
+readFile(absolutePath, (err, data) => {
   if (err) {
     console.log('Error while reading the file');
     return;
@@ -67,45 +80,45 @@ fs.readFile(absolutePath, (err, data) => {
   // this variable catch the initial data, and transform into a new result on each call
   let contentText = data.toString();
   // options: -i, -n
-  if (validator.hasTwoParams(rawArgs) || wfile) {
+  if (hasTwoParams(rawArgs) || wfile) {
     // first check if the pattern is correct
-    validator.isAValidPattern(pattern);
-    contentText = replacer.getPatternResult(pattern, contentText, yargs);
+    isAValidPattern(pattern);
+    contentText = getPatternResult(pattern, contentText, argv);
     const splittedPattern = pattern.split('/');
     const flag = splittedPattern[3];
     // in case exist wfile has w flag
     if (wfile) {
-      fs.writeFileSync(wfile, contentText);
+      writeFileSync(wfile, contentText);
     }
   }
   // options: -f,-e,-i,-n
   else {
-    if (Array.isArray(yargs.e)) {
-      const patterns = yargs.e;
+    if (Array.isArray(argv.e)) {
+      const patterns: string[] = <string[]>argv.e;
       for (pattern of patterns) {
-        validator.isAValidPattern(pattern);
-        contentText = replacer.getPatternResult(pattern, contentText, yargs);
+        isAValidPattern(pattern);
+        contentText = getPatternResult(pattern, contentText, argv);
       }
     }
-    if (typeof yargs.f === 'string') {
+    if (typeof argv.f === 'string') {
       let patterns;
       // this catch if the file has an error
       try {
         // split each line as a pattern
-        patterns = fs.readFileSync(yargs.f, 'utf8').split('\r\n');
+        patterns = readFileSync(argv.f, 'utf8').split('\r\n');
       } catch (e) {
         console.log('Script file does not exist');
         return process.exit();
       }
       for (pattern of patterns) {
-        validator.isAValidPattern(pattern);
-        contentText = replacer.getPatternResult(pattern, contentText, yargs);
+        isAValidPattern(pattern);
+        contentText = getPatternResult(pattern, contentText, argv);
       }
     }
   }
   // at the end this can be done with -i and show on screen it's not needed
-  if (yargs.i) {
-    fs.writeFileSync(absolutePath, contentText);
+  if (argv.i) {
+    writeFileSync(absolutePath, contentText);
   } else {
     console.log(contentText);
   }

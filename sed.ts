@@ -42,12 +42,12 @@ const argv: IArgv = yargs
 // this variable store all the parameters in which it's not a option
 const rawArgs = argv._;
 
+// check if -e option contains at least an element number
+optionEHasNumber(argv.e);
 // validator needed for the minimun case needed
 hasEnoughParams(rawArgs);
 // check if it has flags or is a valid flag
 hasAValidFlag(rawArgs);
-// check if -e option contains at least an element number
-optionEHasNumber(argv.e);
 
 // this variables will store pattern and filepath
 let filePath: string, pattern: string, wfile: string;

@@ -95,12 +95,10 @@ export function hasWFlag(rawArgs: string[]): boolean {
 
 export function optionEHasNumber(eValue: validEOption): void {
   if (eValue) {
-    const hasSomeNumber = eValue.some((value) => {
-      typeof value == 'number';
-    });
+    const hasSomeNumber = eValue.some((value) => typeof value == 'number');
 
     if (hasSomeNumber) {
-      console.error('Has at least one number param for -e option');
+      console.error(`-e option shouldn't have a number value`);
       process.exit();
     }
   }

@@ -1,14 +1,14 @@
-import { promises, access } from 'fs';
+import { promises } from 'fs';
 import { IArgv } from './interfaces/interfaces';
 import { validEOption } from './types/types';
 
-const regexForPattern: RegExp = /^s\/[a-zA-Z. ]+\/[a-zA-Z. ]+\/[g|p|I|w]?$/;
+const regexForPattern: RegExp = /^s\/[a-zA-Z. ]+\/[a-zA-Z. ]+\/[g|p|I|w|Ig|gI]?$/;
 
 // check if the pattern is correct for the regex given
-export function isAValidPattern(pattern: string) {
+export function isAValidPattern(pattern: string): void {
   if (!regexForPattern.test(pattern)) {
     console.error(`pattern not valid ${pattern}`);
-    return process.exit();
+    process.exit();
   }
 }
 
@@ -71,10 +71,17 @@ export function hasTwoParams(rawArgs: string[]): boolean {
   return hasTwoParams;
 }
 
-export function hasAValidFlag(rawArgs: string[]) {
+export function hasAValidFlag(rawArgs: string[]): void {
   const splittedArg = rawArgs[0].split('/');
   const checklast = splittedArg[splittedArg.length - 1];
-  const availableFlags: [string, string, string, string] = ['I', 'p', 'g', 'w'];
+  const availableFlags: [string, string, string, string, string, string] = [
+    'I',
+    'p',
+    'g',
+    'w',
+    'Ig',
+    'gI',
+  ];
   // if it has the 4 splitted has a flag
   if (splittedArg.length === 4 && checklast) {
     if (!availableFlags.includes(checklast)) {

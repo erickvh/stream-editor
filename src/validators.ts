@@ -2,7 +2,7 @@ import { promises } from 'fs';
 import { IArgv } from './interfaces/interfaces';
 import { validEOption } from './types/types';
 
-const regexForPattern: RegExp = /^s\/[a-zA-Z. ]+\/[a-zA-Z. ]+\/[g|p|I|w|Ig|gI]?$/;
+const regexForPattern: RegExp = /^s\/[a-zA-Z. ]+\/[a-zA-Z. ]+\/(g|p|I|w|Ig|gI)?$/;
 
 // check if the pattern is correct for the regex given
 export function isAValidPattern(pattern: string): void {
@@ -94,7 +94,8 @@ export function hasAValidFlag(rawArgs: string[]): void {
 export function hasWFlag(rawArgs: string[]): boolean {
   const splittedArg = rawArgs[0].split('/');
   let checklast = splittedArg[splittedArg.length - 1];
-  if (checklast === 'w' && splittedArg.length == 4 && checklast) {
+
+  if (checklast.includes('w') && splittedArg.length == 4 && checklast) {
     return true;
   }
   return false;

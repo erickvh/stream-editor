@@ -26,7 +26,7 @@ export default function getPatternResult(
     );
   }
   // if it doesn't have -n option will print  an empty value for result text
-  if (!yargs.n) {
+  if (!yargs.n && !flag.includes('p')) {
     resultText = contentText.replace(searchRegexPattern, stringToReplace);
   }
   return resultText;
@@ -39,10 +39,11 @@ function getResultPFlag(
   stringToReplace: string
 ) {
   let resultText: string;
+
+  let lines = contentText.split('\n');
+  const repeatedLines: string[] = [];
   //  if exist n will print each line with changes else  there's not print nothing
   if (nOption) {
-    let lines = contentText.split('\n');
-
     lines = lines.filter((line) => {
       return searchRegexPattern.test(line);
     });
@@ -50,9 +51,17 @@ function getResultPFlag(
     lines = lines.map((line) =>
       line.replace(searchRegexPattern, stringToReplace)
     );
+
     resultText = lines.join('\n');
   } else {
-    resultText = '';
+    lines.forEach((line) => {
+      const replace: string = line.replace(searchRegexPattern, stringToReplace);
+      if (searchRegexPattern.test(line)) {
+        repeatedLines.push(replace);
+      }
+      repeatedLines.push(replace);
+    });
+    resultText = repeatedLines.join('\n');
   }
   return resultText;
 }

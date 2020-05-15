@@ -51,7 +51,6 @@ hasAValidFlag(rawArgs);
 
 // this variables will store pattern and filepath
 let filePath: string, pattern: string, wfile: string;
-
 // in case filepath is undefined, the first  raw parameter is the path
 if (!isFirstParamPattern(rawArgs)) {
   filePath = rawArgs[0];

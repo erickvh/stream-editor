@@ -4,7 +4,8 @@
   "description": "",
   "main": "sed.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
   },
   "author": "",
   "license": "ISC",
@@ -17,6 +18,7 @@
   "dependencies": {
     "@types/node": "^14.0.1",
     "@types/yargs": "^15.0.5",
+    "ts-node": "^8.10.1",
     "yargs": "^15.3.1"
   }
 }

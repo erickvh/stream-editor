@@ -16,13 +16,26 @@ For the -f option (script file), a script file would consiste of several lines c
 
 ## How to install
 
-```
-npm install
+### Using ts-node
 
 ```
+npm install
+npm install -g ts-node
+```
+
+### Using compiled code from TS
+
+```
+npm install
+npm run build
+
+```
+
+after the steps above you can access to the folder `dist` where you can use the vanilla js code compiled
 
 ## options
 
+```
 --version: show version number [booleano]
 -n consider files as separate rather than as a single, continuous
 long stream [booleano]
@@ -34,48 +47,52 @@ commands to be run while processing the input.
 [String]
 -h, --help Show help
 
+```
+
 ### usage
 
 - basic usage
 
 ```
-node sed.js s/pattern/replace/ file_path
+ts-node sed.js s/pattern/replace/ file_path
 
 ```
 
 - using flags
 
 ```
-node sed.js s/pattern/replace/I file_path
-node sed.js s/pattern/replace/g file_path
-node sed.js s/pattern/replace/p file_path
-node sed.js s/pattern/replace/w newfilename file_path
+ts-node sed.js s/pattern/replace/I file_path
+ts-node sed.js s/pattern/replace/Ig file_path
+ts-node sed.js s/pattern/replace/gI file_path
+ts-node sed.js s/pattern/replace/g file_path
+ts-node sed.js s/pattern/replace/p file_path
+ts-node sed.js s/pattern/replace/w newfilename file_path
 
 ```
 
 - option -f
 
 ```
-  node sed.js file_path -f script_path
+  ts-node sed.js file_path -f script_path
 ```
 
 - option -e
 
 ```
-  node sed.js file_path -e s/pattern/replace/ s/pattern/replace/
-  node sed.js file_path -e s/pattern/replace/ -e s/pattern/replace/
+  ts-node sed.js file_path -e s/pattern/replace/ s/pattern/replace/
+  ts-node sed.js file_path -e s/pattern/replace/ -e s/pattern/replace/
 ```
 
 - option -n
 
 ```
-  node sed.js s/pattern/replace/p file_path -n
-  node sed.js s/pattern/replace/ file_path -n
+  ts-node sed.js s/pattern/replace/p file_path -n
+  ts-node sed.js s/pattern/replace/ file_path -n
 ```
 
 - option -i
 
 ```
-  node sed.js file_path -i -f script_path
-  node sed.js s/pattern/replace/ -i
+  ts-node sed.js file_path -i -f script_path
+  ts-node sed.js s/pattern/replace/ -i
 ```
